@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>シマエナガけいさんぼうけん</title>
+<style>
+:root{
+--pink:#ffd7ee;
+--blue:#d9f3ff;
+--yellow:#fff4b5;
+--purple:#e8ddff;
+--green:#d8ffd8;
+--red:#ffd8d8;
+--glass:rgba(255,255,255,.45);
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:"Hiragino Maru Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+min-height:100vh;
+overflow-x:hidden;
+background:
+linear-gradient(180deg,#bde8ff 0%,#e6d6ff 50%,#ffe5f3 100%);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+color:#444;
+position:relative;
+}
+
+/* 背景 */
+.sky{
+position:fixed;
+inset:0;
+overflow:hidden;
+pointer-events:none;
+}
+
+.cloud{
+position:absolute;
+background:white;
+border-radius:100px;
+opacity:.8;
+}
+
+.cloud::before,
+.cloud::after{
+content:"";
+position:absolute;
+background:white;
+border-radius:50%;
+}
+
+.cloud1{
+width:180px;height:60px;
+top:8%;
+left:5%;
+animation:floatCloud 25s linear infinite;
+}
+.cloud1:before{
+width:70px;height:70px;
+left:20px;top:-30px;
+}
+.cloud1:after{
+width:80px;height:80px;
+right:20px;top:-40px;
+}
+
+.cloud2{
+width:220px;height:65px;
+top:18%;
+right:10%;
+animation:floatCloud 35s linear infinite reverse;
+}
+.cloud2:before{
+width:90px;height:90px;
+left:25px;top:-40px;
+}
+.cloud2:after{
+width:85px;height:85px;
+right:20px;top:-35px;
+}
+
+.rainbow{
+position:absolute;
+bottom:-120px;
+left:50%;
+transform:translateX(-50%);
+width:700px;
+height:350px;
+border-radius:350px 350px 0 0;
+background:
+conic-gradient(
+from 180deg,
+#ff8fb9 0 20%,
+#ffd36e 20% 40%,
+#9fe7ff 40% 60%,
+#c6b1ff 60% 80%,
+#ffb3d8 80% 100%);
+filter:blur(12px);
+opacity:.35;
+}
+
+.starbg{
+position:absolute;
+width:8px;
+height:8px;
+background:white;
+border-radius:50%;
+animation:twinkle 3s infinite;
+}
+
+.bubble{
+position:absolute;
+border:2px solid rgba(255,255,255,.5);
+border-radius:50%;
+animation:bubbleUp linear infinite;
+}
+
+/* カード */
+.container{
+position:relative;
+z-index:2;
+width:min(900px,100%);
+}
+
+.card{
+background:var(--glass);
+backdrop-filter:blur(14px);
+border:1px solid rgba(255,255,255,.5);
+border-radius:35px;
+padding:28px;
+box-shadow:0 15px 40px rgba(0,0,0,.12);
+animation:floatCard 4s ease-in-out infinite;
+}
+
+.title{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+font-size:clamp(1.7rem,4vw,2.7rem);
+font-weight:900;
+text-align:center;
+color:#5d5d8d;
+}
+
+.status{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-bottom:16px;
+}
+
+.smallCard{
+background:rgba(255,255,255,.55);
+padding:12px;
+border-radius:18px;
+text-align:center;
+font-weight:700;
+}
+
+.progressWrap{
+margin-bottom:20px;
+}
+
+.progressBar{
+height:22px;
+background:rgba(255,255,255,.5);
+border-radius:999px;
+overflow:hidden;
+}
+
+.progressFill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#ff9cd0,#a7dbff);
+transition:.4s;
+border-radius:999px;
+}
+
+.progressText{
+text-align:center;
+font-weight:800;
+margin-top:8px;
+}
+
+.questionWrap{
+text-align:center;
+position:relative;
+padding:20px;
+}
+
+.question{
+font-size:clamp(3rem,8vw,5rem);
+font-weight:900;
+color:#6b6b90;
+transition:.35s;
+}
+
+.changeAnim{
+animation:questionChange .45s;
+}
+
+.controls{
+display:flex;
+gap:12px;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+input{
+width:180px;
+font-size:2rem;
+padding:14px;
+border:none;
+outline:none;
+border-radius:20px;
+text-align:center;
+background:white;
+box-shadow:0 0 0 4px rgba(255,255,255,.5);
+transition:.25s;
+}
+
+input:focus{
+transform:scale(1.05);
+box-shadow:
+0 0 0 4px #fff,
+0 0 22px #b3e8ff;
+}
+
+button{
+border:none;
+cursor:pointer;
+padding:14px 28px;
+font-size:1.2rem;
+font-weight:900;
+border-radius:18px;
+background:linear-gradient(180deg,#ffb7dd,#ff8fc8);
+color:white;
+box-shadow:0 8px 0 #de6ea8;
+transition:.15s;
+}
+
+button:hover{
+transform:translateY(-2px) scale(1.03);
+}
+
+button:active{
+transform:translateY(6px);
+box-shadow:0 2px 0 #de6ea8;
+}
+
+.message{
+min-height:48px;
+margin-top:18px;
+font-size:1.6rem;
+font-weight:900;
+text-align:center;
+}
+
+.correct{
+color:#1fa243;
+}
+
+.wrong{
+color:#d85151;
+}
+
+.hidden{
+display:none;
+}
+
+/* シマエナガ */
+.bird{
+    position:relative;
+    width:85px;
+    height:85px;
+    flex-shrink:0;
+    display:inline-block;
+}
+
+.bird .body{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:50%;
+background:white;
+box-shadow:0 6px 16px rgba(0,0,0,.15);
+}
+
+.bird .eye{
+position:absolute;
+width:8px;
+height:8px;
+background:black;
+border-radius:50%;
+top:34px;
+}
+
+.bird .eye.left{left:22px;}
+.bird .eye.right{right:22px;}
+
+.bird .cheek{
+position:absolute;
+width:16px;
+height:10px;
+background:#ffbdd0;
+border-radius:50%;
+top:46px;
+}
+
+.bird .cheek.left{left:12px;}
+.bird .cheek.right{right:12px;}
+
+.bird .wing{
+position:absolute;
+width:24px;
+height:36px;
+top:36px;
+border-radius:50%;
+
+background:linear-gradient(
+180deg,
+#ebebeb 0%,
+#cfcfcf 55%,
+#ababab 100%
+);
+}
+
+.bird .wing.left{
+left:-5px;
+transform:rotate(-25deg);
+}
+
+.bird .wing.right{
+right:-5px;
+transform:rotate(25deg);
+}
+
+.floatingBird{
+    position:absolute;
+    right:5%;
+    top:25%;
+    transform:scale(1.1);
+    animation:birdFloat 3s ease-in-out infinite;
+}
+
+.jump{
+animation:jumpBird .6s;
+}
+
+.cheer .body{
+animation:cheerBird .5s infinite;
+}
+
+.resultBird{
+transform:scale(1.7);
+margin:20px auto;
+}
+
+.crown{
+position:absolute;
+top:-22px;
+left:50%;
+transform:translateX(-50%);
+font-size:28px;
+}
+
+/* パーティクル */
+#particles,
+#confetti{
+position:fixed;
+inset:0;
+pointer-events:none;
+overflow:hidden;
+z-index:20;
+}
+
+.star{
+position:absolute;
+font-size:20px;
+animation:flyStar .9s linear forwards;
+}
+
+.confetti{
+position:absolute;
+width:12px;
+height:12px;
+animation:confettiFall 4s linear forwards;
+}
+
+/* 結果 */
+.resultCard{
+text-align:center;
+animation:popIn .9s;
+}
+
+.trophy{
+font-size:90px;
+animation:bounce 2s infinite;
+}
+
+.resultGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:12px;
+margin:20px 0;
+}
+
+.resultItem{
+background:rgba(255,255,255,.5);
+padding:16px;
+border-radius:20px;
+font-weight:800;
+}
+
+.rank{
+font-size:2rem;
+font-weight:900;
+margin:15px 0;
+color:#7654cc;
+}
+
+.shake{
+animation:shake .4s;
+}
+
+.bright{
+animation:bright .5s;
+}
+
+@keyframes floatCloud{
+from{transform:translateX(-120px);}
+to{transform:translateX(120vw);}
+}
+
+@keyframes twinkle{
+50%{opacity:.2;transform:scale(.5);}
+}
+
+@keyframes bubbleUp{
+from{transform:translateY(100vh);}
+to{transform:translateY(-120px);}
+}
+
+@keyframes floatCard{
+50%{transform:translateY(-6px);}
+}
+
+@keyframes birdFloat{
+    0%,100%{
+        transform:scale(1.1) translateY(0) rotate(0deg);
+    }
+    50%{
+        transform:scale(1.1) translateY(-10px) rotate(3deg);
+    }
+}
+
+@keyframes cheerBird{
+50%{transform:rotate(8deg);}
+}
+
+@keyframes flyStar{
+to{
+transform:translate(var(--x),var(--y)) rotate(450deg);
+opacity:0;
+}
+}
+
+@keyframes jumpBird{
+    0%{
+        transform:scale(1.1) translateY(0);
+    }
+    50%{
+        transform:scale(1.2) translateY(-30px);
+    }
+    100%{
+        transform:scale(1.1) translateY(0);
+    }
+}
+
+@keyframes questionChange{
+0%{opacity:0;transform:scale(.7) translateY(20px);}
+100%{opacity:1;transform:scale(1) translateY(0);}
+}
+
+@keyframes shake{
+10%,90%{transform:translateX(-3px);}
+20%,80%{transform:translateX(5px);}
+30%,50%,70%{transform:translateX(-8px);}
+40%,60%{transform:translateX(8px);}
+}
+
+@keyframes confettiFall{
+from{
+transform:translateY(-30px) rotate(0deg);
+}
+to{
+transform:translateY(120vh) rotate(720deg);
+}
+}
+
+@keyframes popIn{
+0%{transform:scale(.5);opacity:0;}
+100%{transform:scale(1);opacity:1;}
+}
+
+@keyframes bounce{
+50%{transform:translateY(-10px);}
+}
+
+@keyframes bright{
+50%{filter:brightness(1.25);}
+}
+
+.beak{
+position:absolute;
+left:50%;
+top:44px;
+transform:translateX(-50%);
+width:0;
+height:0;
+border-left:5px solid transparent;
+border-right:5px solid transparent;
+border-top:8px solid #f0b455;
+z-index:5;
+}
+
+.tail{
+position:absolute;
+width:50px;
+height:12px;
+
+background:linear-gradient(
+90deg,
+#d9d9d9,
+#b5b5b5
+);
+
+border-radius:999px;
+
+right:-25px;
+bottom:18px;
+
+transform:rotate(20deg);
+
+z-index:-1;
+}
+
+.resultButtons{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+.answerGrid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:20px;
+}
+
+.answerChoice{
+    height:65px;
+    border:none;
+    border-radius:18px;
+    background:white;
+    font-size:1.5rem;
+    font-weight:900;
+    color:#666;
+    cursor:pointer;
+}
+
+.answerChoice:active{
+    transform:scale(.95);
+}
+
+@media (max-width:768px){
+
+    .floatingBird{
+        display:none;
+    }
+
+    .card{
+        padding:16px;
+    }
+
+    .title{
+        flex-direction:column;
+        gap:10px;
+        font-size:1.8rem;
+    }
+
+    .status{
+        grid-template-columns:1fr;
+    }
+
+    .question{
+        font-size:2.8rem;
+    }
+
+    .progressWrap{
+        display:none;
+    }
+
+    .answerGrid{
+        grid-template-columns:repeat(4,1fr);
+        gap:8px;
+    }
+
+    .answerChoice{
+        height:70px;
+        font-size:1.4rem;
+    }
+
+    #menuScreen button{
+        width:100%;
+        max-width:280px;
+    }
+
+    .resultGrid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .resultButtons{
+        flex-direction:column;
+        align-items:center;
+        gap:15px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky">
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+<div class="rainbow"></div>
+</div>
+
+<div id="particles"></div>
+<div id="confetti"></div>
+
+<div class="container">
+
+<div id="menuScreen" class="card">
+
+    <div class="title">
+        <div class="bird">
+            <div class="tail"></div>
+            <div class="body"></div>
+            <div class="wing left"></div>
+            <div class="wing right"></div>
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="beak"></div>
+            <div class="cheek left"></div>
+            <div class="cheek right"></div>
+        </div>
+
+        <div>シマエナガけいさんぼうけん</div>
+    </div>
+
+    <div style="text-align:center;padding:20px;">
+
+        <h2 style="margin-bottom:20px;">
+            あそびたいモードをえらんでね！
+        </h2>
+
+        <div style="
+            display:flex;
+            gap:20px;
+            justify-content:center;
+            flex-wrap:wrap;
+        ">
+
+            <button id="additionBtn">
+                ➕ たしざん
+            </button>
+
+            <button id="subtractionBtn">
+                ➖ ひきざん
+            </button>
+
+            <button id="mixedBtn">
+                🎲 まぜまぜ
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="gameScreen" class="card hidden">
+
+<div class="title">
+<div class="bird">
+
+    <div class="tail"></div>
+
+    <div class="body"></div>
+
+    <div class="wing left"></div>
+    <div class="wing right"></div>
+
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+
+    <div class="beak"></div>
+
+    <div class="cheek left"></div>
+    <div class="cheek right"></div>
+
+</div>
+<div>シマエナガけいさんぼうけん</div>
+</div>
+
+<div class="progressWrap">
+<div class="progressBar">
+<div class="progressFill" id="progressFill"></div>
+</div>
+<div class="progressText" id="progressText">1 / 45問（0%）</div>
+</div>
+
+<div class="status">
+<div class="smallCard">問題<br><span id="questionCount">1/45</span></div>
+<div class="smallCard">残り<br><span id="remaining">44</span>問</div>
+<div class="smallCard">タイム<br><span id="timer">0.0秒</span></div>
+</div>
+
+<div class="questionWrap">
+<div class="floatingBird bird" id="mainBird">
+
+<div class="tail"></div>
+
+<div class="body"></div>
+
+<div class="wing left"></div>
+<div class="wing right"></div>
+
+<div class="eye left"></div>
+<div class="eye right"></div>
+
+<div class="beak"></div>
+
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+
+</div>
+
+<div id="question" class="question"></div>
+
+<div class="controls">
+<input id="answerInput" type="text" inputmode="numeric" autocomplete="off">
+<button id="answerBtn">回答</button>
+</div>
+
+<div id="answerButtons"
+     class="answerGrid hidden">
+</div>
+
+<div id="message" class="message"></div>
+</div>
+
+</div>
+
+<div id="resultScreen" class="card resultCard hidden">
+
+<div class="trophy">🏆</div>
+
+<div class="bird resultBird">
+
+<div class="crown">👑</div>
+
+<div class="tail"></div>
+
+<div class="body"></div>
+
+<div class="wing left"></div>
+<div class="wing right"></div>
+
+<div class="eye left"></div>
+<div class="eye right"></div>
+
+<div class="beak"></div>
+
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+
+</div>
+
+<h2>けっかはっぴょう！</h2>
+
+<div class="resultGrid">
+<div class="resultItem">正解<br><span id="rCorrect"></span></div>
+<div class="resultItem">不正解<br><span id="rWrong"></span></div>
+<div class="resultItem">正解率<br><span id="rRate"></span></div>
+<div class="resultItem">タイム<br><span id="rTime"></span></div>
+</div>
+
+<div id="rank" class="rank"></div>
+
+<div class="resultButtons">
+    <button id="restartBtn">
+        もういちどプレイ
+    </button>
+
+    <button id="menuBtn">
+        モードせんたく
+    </button>
+</div>
+
+</div>
+
+<script>
+(() => {
+
+const TOTAL = 45;
+
+const menuScreen = document.getElementById("menuScreen");
+const gameScreen = document.getElementById("gameScreen");
+const resultScreen = document.getElementById("resultScreen");
+const questionEl = document.getElementById("question");
+const answerInput = document.getElementById("answerInput");
+const answerBtn = document.getElementById("answerBtn");
+const messageEl = document.getElementById("message");
+const timerEl = document.getElementById("timer");
+const questionCountEl = document.getElementById("questionCount");
+const remainingEl = document.getElementById("remaining");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const bird = document.getElementById("mainBird");
+
+const additionBtn =
+document.getElementById("additionBtn");
+
+const subtractionBtn =
+document.getElementById("subtractionBtn");
+
+const mixedBtn =
+document.getElementById("mixedBtn");
+
+const isMobile =
+window.matchMedia("(max-width:768px)").matches;
+
+const answerButtons =
+document.getElementById("answerButtons");
+
+let questions = [];
+let index = 0;
+let wrong = 0;
+let currentAnswer = 0;
+let startTime = 0;
+let timerId = null;
+let judging = false;
+
+let gameMode = null;
+
+let missedQuestions = new Set();
+
+function generateQuestions(){
+
+    questions = [];
+
+    const pool = [];
+
+    if(gameMode === "addition"){
+
+        for(let a = 1; a <= 9; a++){
+
+            for(let b = 1; b <= 9; b++){
+
+                if(a + b <= 10){
+
+                    pool.push({
+                        text:`${a} + ${b}`,
+                        answer:a + b
+                    });
+
+                }
+
+            }
+
+        }
+
+    }else if(gameMode === "subtraction"){
+
+        for(let a = 1; a <= 10; a++){
+
+            for(let b = 1; b < a; b++){
+
+                pool.push({
+                    text:`${a} - ${b}`,
+                    answer:a - b
+                });
+
+            }
+
+        }
+
+    }else if(gameMode === "mixed"){
+
+    // 足し算45問
+    for(let a = 1; a <= 9; a++){
+
+        for(let b = 1; b <= 9; b++){
+
+            if(a + b <= 10){
+
+                pool.push({
+                    text:`${a} + ${b}`,
+                    answer:a + b
+                });
+
+            }
+
+        }
+
+    }
+
+    // 引き算45問
+    for(let a = 1; a <= 10; a++){
+
+        for(let b = 1; b < a; b++){
+
+            pool.push({
+                text:`${a} - ${b}`,
+                answer:a - b
+            });
+
+        }
+
+    }
+
+}
+
+    for(let i = pool.length - 1; i > 0; i--){
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [pool[i], pool[j]] =
+        [pool[j], pool[i]];
+    }
+
+    questions = pool.slice(0, TOTAL);
+
+}
+
+function updateProgress(){
+const num = index + 1;
+const percent = Math.floor((index/TOTAL)*100);
+questionCountEl.textContent = `${num}/${TOTAL}`;
+remainingEl.textContent = TOTAL - num;
+progressFill.style.width = `${(index/TOTAL)*100}%`;
+progressText.textContent = `${num} / ${TOTAL}問（${percent}%）`;
+}
+
+function showQuestion(){
+const q = questions[index];
+currentAnswer = q.answer;
+
+questionEl.classList.remove("changeAnim");
+void questionEl.offsetWidth;
+questionEl.classList.add("changeAnim");
+
+questionEl.textContent = q.text;
+updateProgress();
+if(!isMobile){
+    answerInput.value = "";
+    answerInput.focus();
+    }
+}
+
+function startTimer(){
+startTime = performance.now();
+
+timerId = setInterval(()=>{
+const t=(performance.now()-startTime)/1000;
+timerEl.textContent=`${t.toFixed(1)}秒`;
+},100);
+}
+
+function stopTimer(){
+clearInterval(timerId);
+return ((performance.now()-startTime)/1000);
+}
+
+function createStars(){
+const layer=document.getElementById("particles");
+
+for(let i=0;i<16;i++){
+const s=document.createElement("div");
+s.className="star";
+s.textContent=Math.random()>.5?"⭐":"✨";
+s.style.left=`${window.innerWidth/2}px`;
+s.style.top=`${window.innerHeight/2}px`;
+s.style.setProperty("--x",(Math.random()*400-200)+"px");
+s.style.setProperty("--y",(Math.random()*300-150)+"px");
+layer.appendChild(s);
+setTimeout(()=>s.remove(),900);
+}
+}
+
+function judge(valueFromButton){
+
+    if(judging) return;
+
+    const value =
+    valueFromButton ??
+    answerInput.value.trim();
+
+    if(value==="") return;
+
+judging = true;
+
+if(Number(value)===currentAnswer){
+
+messageEl.innerHTML="⭕ せいかい！";
+messageEl.className="message correct";
+
+bird.classList.remove("cheer");
+bird.classList.add("jump");
+
+gameScreen.classList.add("bright");
+createStars();
+
+}
+else{
+
+    if(!missedQuestions.has(index)){
+        wrong++;
+        missedQuestions.add(index);
+    }
+
+    messageEl.innerHTML=
+    `❌ ざんねん！<br>もういちど！`;
+
+    messageEl.className="message wrong";
+
+    bird.classList.remove("jump");
+    bird.classList.add("cheer");
+
+    gameScreen.classList.add("shake");
+
+    if(!isMobile){
+        answerInput.value="";
+        answerInput.focus();
+    }
+
+    setTimeout(()=>{
+        gameScreen.classList.remove("shake");
+        bird.classList.remove("cheer");
+        judging=false;
+    },600);
+
+    return;
+}
+
+setTimeout(()=>{
+
+    gameScreen.classList.remove("bright");
+    bird.classList.remove("jump");
+
+    index++;
+
+    if(index>=TOTAL){
+        finishGame();
+        return;
+    }
+
+    showQuestion();
+    messageEl.textContent="";
+    judging=false;
+
+},600);
+}
+
+function getRank(time){
+if(time<60) return "🏆 けいさんキング！";
+if(time<90) return "🥇 すごい！";
+if(time<120) return "🥈 はやい！";
+if(time<150) return "🥉 がんばったね！";
+return "😊 さいごまでできたね！";
+}
+
+function confetti(){
+const box=document.getElementById("confetti");
+
+for(let i=0;i<150;i++){
+const c=document.createElement("div");
+c.className="confetti";
+c.style.left=Math.random()*100+"%";
+c.style.background=[
+"#ffb8da",
+"#9fe6ff",
+"#fff29d",
+"#ceb4ff"
+][Math.floor(Math.random()*4)];
+c.style.animationDelay=Math.random()*2+"s";
+box.appendChild(c);
+setTimeout(()=>c.remove(),5000);
+}
+}
+
+function finishGame(){
+
+const totalTime=stopTimer();
+
+gameScreen.classList.add("hidden");
+resultScreen.classList.remove("hidden");
+
+document.getElementById("rCorrect").textContent=TOTAL - wrong;
+document.getElementById("rWrong").textContent=wrong;
+document.getElementById("rRate").textContent=
+`${Math.round((TOTAL - wrong)/TOTAL*100)}%`;
+document.getElementById("rTime").textContent=
+`${totalTime.toFixed(1)}秒`;
+
+document.getElementById("rank").textContent =
+getRank(totalTime);
+
+confetti();
+}
+
+function initBackground(){
+
+const sky=document.getElementById("sky");
+
+for(let i=0;i<30;i++){
+const star=document.createElement("div");
+star.className="starbg";
+star.style.left=Math.random()*100+"%";
+star.style.top=Math.random()*100+"%";
+star.style.animationDelay=Math.random()*3+"s";
+sky.appendChild(star);
+}
+
+for(let i=0;i<15;i++){
+const b=document.createElement("div");
+b.className="bubble";
+const size=20+Math.random()*60;
+b.style.width=size+"px";
+b.style.height=size+"px";
+b.style.left=Math.random()*100+"%";
+b.style.animationDuration=(8+Math.random()*12)+"s";
+sky.appendChild(b);
+}
+}
+
+function showMenu(){
+
+    clearInterval(timerId);
+
+    menuScreen.classList.remove("hidden");
+
+    gameScreen.classList.add("hidden");
+
+    resultScreen.classList.add("hidden");
+
+}
+
+function startGame(){
+
+if(isMobile){
+
+    document
+    .querySelector(".controls")
+    .classList.add("hidden");
+
+    answerButtons
+    .classList.remove("hidden");
+
+}else{
+
+    document
+    .querySelector(".controls")
+    .classList.remove("hidden");
+
+    answerButtons
+    .classList.add("hidden");
+
+}
+
+menuScreen.classList.add("hidden");
+gameScreen.classList.remove("hidden");
+
+index=0;
+wrong=0;
+judging=false;
+
+missedQuestions = new Set();
+generateQuestions();
+
+if(isMobile){
+    createAnswerButtons();
+}
+
+resultScreen.classList.add("hidden");
+gameScreen.classList.remove("hidden");
+
+showQuestion();
+
+clearInterval(timerId);
+
+timerEl.textContent="0.0秒";
+startTimer();
+}
+
+function createAnswerButtons(){
+
+    answerButtons.innerHTML = "";
+
+    for(let i = 0;i <= 10;i++){
+
+        const btn =
+        document.createElement("button");
+
+        btn.className = "answerChoice";
+
+        btn.textContent = i;
+
+        btn.addEventListener("click",()=>{
+
+            judge(i);
+
+        });
+
+        answerButtons.appendChild(btn);
+
+    }
+
+}
+
+additionBtn.addEventListener("click",()=>{
+
+    gameMode = "addition";
+
+    startGame();
+
+});
+
+subtractionBtn.addEventListener("click",()=>{
+
+    gameMode = "subtraction";
+
+    startGame();
+
+});
+
+mixedBtn.addEventListener("click",()=>{
+
+    gameMode = "mixed";
+
+    startGame();
+
+});
+
+answerBtn.addEventListener("click",judge);
+
+answerInput.addEventListener("keydown",e=>{
+if(e.key==="Enter") judge();
+});
+
+document.getElementById("restartBtn")
+.addEventListener("click",startGame);
+
+document.getElementById("menuBtn")
+.addEventListener("click",showMenu);
+
+initBackground();
+showMenu();
+
+})();
+
+</script>
+
+
+</body>
+</html>
