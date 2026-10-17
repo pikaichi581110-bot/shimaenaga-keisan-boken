@@ -912,9 +912,6 @@ document.getElementById("subtractionBtn");
 const mixedBtn =
 document.getElementById("mixedBtn");
 
-const isMobile =
-window.matchMedia("(max-width:768px)").matches;
-
 const answerButtons =
 document.getElementById("answerButtons");
 
@@ -929,6 +926,10 @@ let judging = false;
 let gameMode = null;
 
 let missedQuestions = new Set();
+
+function isMobile(){
+    return window.matchMedia("(max-width:768px)").matches;
+}
 
 function generateQuestions(){
 
@@ -1037,7 +1038,7 @@ questionEl.classList.add("changeAnim");
 
 questionEl.textContent = q.text;
 updateProgress();
-if(!isMobile){
+if(!isMobile()){
     answerInput.value = "";
     answerInput.focus();
     }
@@ -1114,7 +1115,7 @@ function judge(valueFromButton){
     
         gameScreen.classList.add("shake");
     
-        if(!isMobile){
+        if(!isMobile()){
             answerInput.value="";
             answerInput.focus();
         }
@@ -1263,7 +1264,7 @@ function showMenu(){
 
 function startGame(){
 
-if(isMobile){
+if(isMobile()){
 
     document
     .querySelector(".controls")
@@ -1293,7 +1294,7 @@ judging=false;
 missedQuestions = new Set();
 generateQuestions();
 
-if(isMobile){
+if(isMobile()){
     createAnswerButtons();
 }
 
