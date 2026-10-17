@@ -918,6 +918,12 @@ window.matchMedia("(max-width:768px)").matches;
 const answerButtons =
 document.getElementById("answerButtons");
 
+const correctSE =
+document.getElementById("correctSE");
+
+const wrongSE =
+document.getElementById("wrongSE");
+
 let questions = [];
 let index = 0;
 let wrong = 0;
@@ -1057,14 +1063,6 @@ clearInterval(timerId);
 return ((performance.now()-startTime)/1000);
 }
 
-function vibrate(ms){
-
-    if(navigator.vibrate){
-        navigator.vibrate(ms);
-    }
-
-}
-
 function createStars(){
 const layer=document.getElementById("particles");
 
@@ -1094,67 +1092,71 @@ function judge(valueFromButton){
     judging = true;
     
     if(Number(value)===currentAnswer){
-    vibrate(60);
-    messageEl.innerHTML="⭕ せいかい！";
-    messageEl.className="message correct";
-    
-    bird.classList.remove("cheer");
-    bird.classList.add("jump");
-    
-    gameScreen.classList.add("bright");
-    createStars();
-    
-}
-else{
-    
-    vibrate([120,80,120]);
-    
-    if(!missedQuestions.has(index)){
-        wrong++;
-        missedQuestions.add(index);
-    }
-
-    messageEl.innerHTML=
-    `❌ ざんねん！<br>もういちど！`;
-
-    messageEl.className="message wrong";
-
-    bird.classList.remove("jump");
-    bird.classList.add("cheer");
-
-    gameScreen.classList.add("shake");
-
-    if(!isMobile){
-        answerInput.value="";
-        answerInput.focus();
-    }
-
-    setTimeout(()=>{
-        gameScreen.classList.remove("shake");
+        
+        correctSE.currentTime = 0;
+        correctSE.play();
+        
+        messageEl.innerHTML="⭕ せいかい！";
+        messageEl.className="message correct";
+        
         bird.classList.remove("cheer");
-        judging=false;
-    },600);
-
-    return;
-}
-
-setTimeout(()=>{
-
-    gameScreen.classList.remove("bright");
-    bird.classList.remove("jump");
-
-    index++;
-
-    if(index>=TOTAL){
-        finishGame();
+        bird.classList.add("jump");
+        
+        gameScreen.classList.add("bright");
+        createStars();
+        
+    }
+    else{
+        
+        wrongSE.currentTime = 0;
+        wrongSE.play();
+        
+        if(!missedQuestions.has(index)){
+            wrong++;
+            missedQuestions.add(index);
+        }
+    
+        messageEl.innerHTML=
+        `❌ ざんねん！<br>もういちど！`;
+    
+        messageEl.className="message wrong";
+    
+        bird.classList.remove("jump");
+        bird.classList.add("cheer");
+    
+        gameScreen.classList.add("shake");
+    
+        if(!isMobile){
+            answerInput.value="";
+            answerInput.focus();
+        }
+    
+        setTimeout(()=>{
+            gameScreen.classList.remove("shake");
+            bird.classList.remove("cheer");
+            judging=false;
+        },600);
+    
         return;
     }
 
-    showQuestion();
-    messageEl.textContent="";
-    judging=false;
+    setTimeout(()=>{
 
-},600);
+        gameScreen.classList.remove("bright");
+        bird.classList.remove("jump");
+
+        index++;
+
+        if(index>=TOTAL){
+            finishGame();
+            return;
+        }
+
+        showQuestion();
+        messageEl.textContent="";
+        judging=false;
+    
+    },600);
 }
 
 function getRank(time){
@@ -1391,6 +1393,13 @@ showMenu();
 
 </script>
 
+<audio id="correctSE">
+<source src="correct.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="wrongSE">
+<source src="wrong.mp3" type="audio/mpeg">
+</audio>
 
 </body>
 </html>
