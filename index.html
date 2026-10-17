@@ -589,16 +589,20 @@ z-index:-1;
 }
 
 @media (max-width:768px){
-
+    
+    #gameScreen,
+    #resultScreen{
+        padding-top:45px;
+    }
+    
     body{
         height:100vh;
         overflow:hidden;
+        padding:15px;
     }
 
     .container{
-        height:100vh;
-        display:flex;
-        align-items:center;
+        width:100%;
     }
     
     .floatingBird{
@@ -606,6 +610,8 @@ z-index:-1;
     }
 
     .card{
+        width:100%;
+        margin:0 auto;
         padding:20px;
         max-height:95vh;
         overflow:hidden;
@@ -615,7 +621,6 @@ z-index:-1;
         flex-direction:row;
         gap:10px;
         font-size:1.8rem;
-        margin-top:40px;
     }
 
     .title div:last-child{
