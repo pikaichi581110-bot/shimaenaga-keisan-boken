@@ -1093,8 +1093,7 @@ function judge(valueFromButton){
     
     if(Number(value)===currentAnswer){
         
-        correctSE.currentTime = 0;
-        correctSE.play();
+        console.log("正解");
         
         messageEl.innerHTML="⭕ せいかい！";
         messageEl.className="message correct";
@@ -1108,8 +1107,7 @@ function judge(valueFromButton){
     }
     else{
         
-        wrongSE.currentTime = 0;
-        wrongSE.play();
+        console.log("不正解");
         
         if(!missedQuestions.has(index)){
             wrong++;
