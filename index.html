@@ -139,6 +139,7 @@ border-radius:35px;
 padding:28px;
 box-shadow:0 15px 40px rgba(0,0,0,.12);
 animation:floatCard 4s ease-in-out infinite;
+position:relative;
 }
 
 .title{
@@ -665,6 +666,19 @@ z-index:-1;
 .gameTitle{
     line-height:1.2;
 }
+.retireBtn{
+    position:absolute;
+    top:15px;
+    right:15px;
+    padding:8px 12px;
+    font-size:.9rem;
+    border:none;
+    border-radius:12px;
+    background:#ff8f8f;
+    color:white;
+    font-weight:700;
+    box-shadow:0 4px 0 #d66;
+}
 
 </style>
 </head>
@@ -697,10 +711,10 @@ z-index:-1;
         </div>
 
         <div class="gameTitle">
-        シマエナガ3<br>けいさん<br>ぼうけん
+        シマエナガ<br>けいさん<br>ぼうけん
         </div>
     </div>
-
+    
     <div style="text-align:center;padding:20px;">
 
         <h2 class="menuTitle">
@@ -734,6 +748,10 @@ z-index:-1;
 </div>
 
 <div id="gameScreen" class="card hidden">
+
+<button id="retireBtn" class="retireBtn">
+🏳️ リタイア
+</button>
 
 <div class="title">
 <div class="bird">
@@ -863,7 +881,7 @@ z-index:-1;
 <script>
 (() => {
 
-const TOTAL = 4;
+const TOTAL = 45;
 
 const menuScreen = document.getElementById("menuScreen");
 const gameScreen = document.getElementById("gameScreen");
@@ -878,6 +896,9 @@ const remainingEl = document.getElementById("remaining");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const bird = document.getElementById("mainBird");
+
+const retireBtn =
+document.getElementById("retireBtn");
 
 const additionBtn =
 document.getElementById("additionBtn");
@@ -1150,6 +1171,36 @@ setTimeout(()=>c.remove(),5000);
 }
 }
 
+function retireGame(){
+
+    if(!confirm("リタイアしますか？")){
+        return;
+    }
+    
+    stopTimer();
+
+    gameScreen.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+
+    document.getElementById("rCorrect").textContent =
+    Math.max(0, index - wrong);
+
+    document.getElementById("rWrong").textContent =
+    wrong;
+
+    document.getElementById("rRate").textContent =
+    index === 0
+        ? "0%"
+        : `${Math.round((index - wrong)/index*100)}%`;
+
+    document.getElementById("rTime").textContent =
+    timerEl.textContent;
+
+    document.getElementById("rank").textContent =
+    `🏳️ ${TOTAL}問中${index}問でリタイア`;
+
+}
+
 function finishGame(){
 
 const totalTime=stopTimer();
@@ -1314,6 +1365,11 @@ document.getElementById("restartBtn")
 
 document.getElementById("menuBtn")
 .addEventListener("click",showMenu);
+
+retireBtn.addEventListener(
+    "click",
+    retireGame
+);
 
 initBackground();
 showMenu();
