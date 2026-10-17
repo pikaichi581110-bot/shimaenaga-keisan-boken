@@ -932,26 +932,31 @@ function playCorrectSound(){
     const audioCtx =
     new (window.AudioContext || window.webkitAudioContext)();
 
-    const osc1 = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-
-    osc1.connect(gain);
     gain.connect(audioCtx.destination);
 
     gain.gain.value = 0.12;
 
-    osc1.frequency.value = 523;
-    osc1.type = "sine";
+    const osc = audioCtx.createOscillator();
+    osc.connect(gain);
 
-    osc1.start();
+    osc.type = "sine";
 
-    setTimeout(()=>{
-        osc1.frequency.value = 784;
-    },100);
+    // 「ピン」
+    osc.frequency.setValueAtTime(
+        523,
+        audioCtx.currentTime
+    );
 
-    setTimeout(()=>{
-        osc1.stop();
-    },220);
+    // 「ポン」
+    osc.frequency.setValueAtTime(
+        784,
+        audioCtx.currentTime + 0.12
+    );
+
+    osc.start();
+
+    osc.stop(audioCtx.currentTime + 0.3);
 
 }
 
