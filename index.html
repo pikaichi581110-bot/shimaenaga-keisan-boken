@@ -927,6 +927,52 @@ let gameMode = null;
 
 let missedQuestions = new Set();
 
+function playCorrectSound(){
+
+    const audioCtx =
+    new (window.AudioContext || window.webkitAudioContext)();
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.frequency.value = 880;
+    osc.type = "sine";
+
+    gain.gain.value = 0.1;
+
+    osc.start();
+
+    setTimeout(()=>{
+        osc.stop();
+    },120);
+}
+
+function playWrongSound(){
+
+    const audioCtx =
+    new (window.AudioContext || window.webkitAudioContext)();
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.frequency.value = 220;
+    osc.type = "square";
+
+    gain.gain.value = 0.1;
+
+    osc.start();
+
+    setTimeout(()=>{
+        osc.stop();
+    },200);
+}
+
 function isMobile(){
     return window.matchMedia("(max-width:768px)").matches;
 }
@@ -1087,6 +1133,8 @@ function judge(valueFromButton){
     judging = true;
     
     if(Number(value)===currentAnswer){
+
+        playCorrectSound();
         
         messageEl.innerHTML="⭕ せいかい！";
         messageEl.className="message correct";
@@ -1099,6 +1147,8 @@ function judge(valueFromButton){
         
     }
     else{
+
+        playWrongSound();
         
         if(!missedQuestions.has(index)){
             wrong++;
