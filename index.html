@@ -1057,6 +1057,14 @@ clearInterval(timerId);
 return ((performance.now()-startTime)/1000);
 }
 
+function vibrate(ms){
+
+    if(navigator.vibrate){
+        navigator.vibrate(ms);
+    }
+
+}
+
 function createStars(){
 const layer=document.getElementById("particles");
 
@@ -1083,22 +1091,24 @@ function judge(valueFromButton){
 
     if(value==="") return;
 
-judging = true;
-
-if(Number(value)===currentAnswer){
-
-messageEl.innerHTML="⭕ せいかい！";
-messageEl.className="message correct";
-
-bird.classList.remove("cheer");
-bird.classList.add("jump");
-
-gameScreen.classList.add("bright");
-createStars();
-
+    judging = true;
+    
+    if(Number(value)===currentAnswer){
+    vibrate(60);
+    messageEl.innerHTML="⭕ せいかい！";
+    messageEl.className="message correct";
+    
+    bird.classList.remove("cheer");
+    bird.classList.add("jump");
+    
+    gameScreen.classList.add("bright");
+    createStars();
+    
 }
 else{
-
+    
+    vibrate([120,80,120]);
+    
     if(!missedQuestions.has(index)){
         wrong++;
         missedQuestions.add(index);
