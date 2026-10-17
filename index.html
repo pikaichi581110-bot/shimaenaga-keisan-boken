@@ -138,7 +138,6 @@ border:1px solid rgba(255,255,255,.5);
 border-radius:35px;
 padding:28px;
 box-shadow:0 15px 40px rgba(0,0,0,.12);
-animation:floatCard 4s ease-in-out infinite;
 position:relative;
 }
 
@@ -454,10 +453,6 @@ from{transform:translateY(100vh);}
 to{transform:translateY(-120px);}
 }
 
-@keyframes floatCard{
-50%{transform:translateY(-6px);}
-}
-
 @keyframes birdFloat{
     0%,100%{
         transform:scale(1.1) translateY(0) rotate(0deg);
@@ -591,7 +586,7 @@ z-index:-1;
 @media (max-width:768px){
     
     #gameScreen{
-        padding-top:70px;
+        padding-top:60px;
     }
     #resultScreen{
         padding-top:45px;
