@@ -932,22 +932,27 @@ function playCorrectSound(){
     const audioCtx =
     new (window.AudioContext || window.webkitAudioContext)();
 
-    const osc = audioCtx.createOscillator();
+    const osc1 = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
 
-    osc.connect(gain);
+    osc1.connect(gain);
     gain.connect(audioCtx.destination);
 
-    osc.frequency.value = 880;
-    osc.type = "sine";
+    gain.gain.value = 0.12;
 
-    gain.gain.value = 0.1;
+    osc1.frequency.value = 523;
+    osc1.type = "sine";
 
-    osc.start();
+    osc1.start();
 
     setTimeout(()=>{
-        osc.stop();
-    },120);
+        osc1.frequency.value = 784;
+    },100);
+
+    setTimeout(()=>{
+        osc1.stop();
+    },220);
+
 }
 
 function playWrongSound(){
@@ -961,16 +966,21 @@ function playWrongSound(){
     osc.connect(gain);
     gain.connect(audioCtx.destination);
 
-    osc.frequency.value = 220;
-    osc.type = "square";
+    gain.gain.value = 0.08;
 
-    gain.gain.value = 0.1;
+    osc.frequency.value = 250;
+    osc.type = "square";
 
     osc.start();
 
     setTimeout(()=>{
+        osc.frequency.value = 150;
+    },100);
+
+    setTimeout(()=>{
         osc.stop();
-    },200);
+    },250);
+
 }
 
 function isMobile(){
