@@ -928,31 +928,44 @@ let gameMode = null;
 
 let missedQuestions = new Set();
 
-function playCorrectSound(){
+const audioCtx =
+new (window.AudioContext || window.webkitAudioContext)();
 
-    const audioCtx =
-    new (window.AudioContext || window.webkitAudioContext)();
+function playCorrectSound(){
 
     const gain = audioCtx.createGain();
     gain.connect(audioCtx.destination);
 
-    gain.gain.value = 0.12;
+    gain.gain.setValueAtTime(
+        0,
+        audioCtx.currentTime
+    );
+
+    gain.gain.linearRampToValueAtTime(
+        0.12,
+        audioCtx.currentTime + 0.02
+    );
+    
+    gain.gain.linearRampToValueAtTime(
+        0,
+        audioCtx.currentTime + 0.3
+    );
 
     const osc = audioCtx.createOscillator();
     osc.connect(gain);
 
-    osc.type = "sine";
+    osc.type = "triangle";
 
     // 「ピン」
     osc.frequency.setValueAtTime(
-        523,
+        784,
         audioCtx.currentTime
     );
 
     // 「ポン」
     osc.frequency.setValueAtTime(
-        784,
-        audioCtx.currentTime + 0.12
+        1319,
+        audioCtx.currentTime + 0.15
     );
 
     osc.start();
@@ -962,9 +975,6 @@ function playCorrectSound(){
 }
 
 function playWrongSound(){
-
-    const audioCtx =
-    new (window.AudioContext || window.webkitAudioContext)();
 
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
@@ -1329,6 +1339,10 @@ function showMenu(){
 }
 
 function startGame(){
+
+if(audioCtx.state === "suspended"){
+    audioCtx.resume();
+}
 
 if(isMobile()){
 
