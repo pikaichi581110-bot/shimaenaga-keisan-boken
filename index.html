@@ -1268,10 +1268,18 @@ function retireGame(){
     document.getElementById("rWrong").textContent =
     wrong;
 
-    document.getElementById("rRate").textContent =
-    index === 0
-        ? "0%"
-        : `${Math.round((index - wrong)/index*100)}%`;
+    const rate =
+index === 0
+    ? 0
+    : Math.max(
+        0,
+        Math.round(
+            (index - wrong) / index * 100
+        )
+    );
+
+document.getElementById("rRate").textContent =
+`${rate}%`;
 
     document.getElementById("rTime").textContent =
     timerEl.textContent;
@@ -1291,7 +1299,12 @@ resultScreen.classList.remove("hidden");
 document.getElementById("rCorrect").textContent=TOTAL - wrong;
 document.getElementById("rWrong").textContent=wrong;
 document.getElementById("rRate").textContent=
-`${Math.round((TOTAL - wrong)/TOTAL*100)}%`;
+`${Math.max(
+    0,
+    Math.round(
+        (TOTAL - wrong) / TOTAL * 100
+    )
+)}%`;
 document.getElementById("rTime").textContent=
 `${totalTime.toFixed(1)}秒`;
 
@@ -1370,6 +1383,16 @@ gameScreen.classList.remove("hidden");
 index=0;
 wrong=0;
 judging=false;
+messageEl.textContent = "";
+messageEl.className = "message";
+
+document.getElementById("rank").textContent = "";
+
+document.getElementById("rCorrect").textContent = "";
+document.getElementById("rWrong").textContent = "";
+document.getElementById("rRate").textContent = "";
+document.getElementById("rTime").textContent = "";
+document.getElementById("confetti").innerHTML = "";
 
 missedQuestions = new Set();
 generateQuestions();
