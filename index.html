@@ -156,7 +156,7 @@ color:#5d5d8d;
 
 .status{
 display:grid;
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(4,1fr);
 gap:10px;
 margin-bottom:16px;
 }
@@ -564,7 +564,7 @@ z-index:-1;
 
 .answerGrid{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(6,1fr);
     gap:8px;
     margin-top:20px;
 }
@@ -626,7 +626,10 @@ z-index:-1;
     }
 
     .status{
-        grid-template-columns:repeat(3,1fr);
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:10px;
+        margin-bottom:16px;
     }
 
     .question{
@@ -638,7 +641,7 @@ z-index:-1;
     }
 
     .answerGrid{
-        grid-template-columns:repeat(5,1fr);
+        grid-template-columns:repeat(6,1fr);
         gap:8px;
     }
 
@@ -684,6 +687,83 @@ z-index:-1;
     box-shadow:0 4px 0 #d66;
 }
 
+.redMode{
+    background:linear-gradient(
+        180deg,
+        #ffb0b0,
+        #ff8888
+    );
+
+    box-shadow:0 8px 0 #d86e6e;
+}
+
+.yellowMode{
+    background:linear-gradient(
+        180deg,
+        #ffe88a,
+        #ffd74f
+    );
+
+    color:#555;
+
+    box-shadow:0 8px 0 #d8b63e;
+}
+
+.blueMode{
+    background:linear-gradient(
+        180deg,
+        #9fe6ff,
+        #70cfff
+    );
+
+    box-shadow:0 8px 0 #56acd8;
+}
+
+.greenMode{
+    background:linear-gradient(
+        180deg,
+        #a9f5a9,
+        #7ee67e
+    );
+
+    color:#444;
+
+    box-shadow:0 8px 0 #60bb60;
+}
+
+.rainbowMode{
+    background:linear-gradient(
+        90deg,
+        #ff9dbf,
+        #ffd75a,
+        #9fe6ff,
+        #bda8ff
+    );
+
+    box-shadow:0 8px 0 #9d8cd6;
+}
+
+.redMode:hover,
+.yellowMode:hover,
+.blueMode:hover,
+.greenMode:hover,
+.rainbowMode:hover{
+    filter:brightness(1.08);
+}
+
+.rainbowMode{
+    grid-column:1 / -1;
+    justify-self:center;
+    width:220px;
+}
+
+.menuButtons{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
 </style>
 </head>
 <body>
@@ -726,22 +806,25 @@ z-index:-1;
             えらんでね！
         </h2>
 
-        <div style="
-            display:flex;
-            gap:20px;
-            justify-content:center;
-            flex-wrap:wrap;
-        ">
+        <div class="menuButtons">
 
-            <button id="additionBtn">
-                ➕ たしざん
+            <button id="addition1Btn" class="redMode">
+                🟥 たしざん①
             </button>
 
-            <button id="subtractionBtn">
-                ➖ ひきざん
+            <button id="addition2Btn" class="yellowMode">
+                🟨 たしざん②
             </button>
 
-            <button id="mixedBtn">
+            <button id="subtraction1Btn" class="blueMode">
+                🟦 ひきざん①
+            </button>
+
+            <button id="subtraction2Btn" class="greenMode">
+                🟩 ひきざん②
+            </button>
+
+            <button id="mixedBtn" class="rainbowMode">
                 🎲 まぜまぜ
             </button>
 
@@ -796,6 +879,7 @@ z-index:-1;
 <div class="smallCard">問題<br><span id="questionCount">1/45</span></div>
 <div class="smallCard">残り<br><span id="remaining">44</span>問</div>
 <div class="smallCard">タイム<br><span id="timer">0.0秒</span></div>
+<div class="smallCard">モード<br><span id="modeName">-</span></div>
 </div>
 
 <div class="questionWrap">
@@ -898,17 +982,24 @@ const timerEl = document.getElementById("timer");
 const questionCountEl = document.getElementById("questionCount");
 const remainingEl = document.getElementById("remaining");
 const progressFill = document.getElementById("progressFill");
+const modeNameEl = document.getElementById("modeName");
 const progressText = document.getElementById("progressText");
 const bird = document.getElementById("mainBird");
 
 const retireBtn =
 document.getElementById("retireBtn");
 
-const additionBtn =
-document.getElementById("additionBtn");
+const addition1Btn =
+document.getElementById("addition1Btn");
 
-const subtractionBtn =
-document.getElementById("subtractionBtn");
+const addition2Btn =
+document.getElementById("addition2Btn");
+
+const subtraction1Btn =
+document.getElementById("subtraction1Btn");
+
+const subtraction2Btn =
+document.getElementById("subtraction2Btn");
 
 const mixedBtn =
 document.getElementById("mixedBtn");
@@ -1009,7 +1100,7 @@ function generateQuestions(){
 
     const pool = [];
 
-    if(gameMode === "addition"){
+    if(gameMode === "addition1"){
 
         for(let a = 1; a <= 9; a++){
 
@@ -1028,7 +1119,7 @@ function generateQuestions(){
 
         }
 
-    }else if(gameMode === "subtraction"){
+    }else if(gameMode === "subtraction1"){
 
         for(let a = 1; a <= 10; a++){
 
@@ -1043,40 +1134,88 @@ function generateQuestions(){
 
         }
 
+    }else if(gameMode==="addition2"){
+
+        for(let a=2;a<=9;a++){
+
+            for(let b=2;b<=9;b++){
+
+                if(a+b>=11){
+
+                    pool.push({
+                        text:`${a} + ${b}`,
+                        answer:a+b
+                    });
+
+                }
+            }
+        }
+    }else if(gameMode==="subtraction2"){
+
+        for(let a=11;a<=18;a++){
+
+            for(let b=2;b<=9;b++){
+
+                if(a-b>=1 && a-b<=9){
+
+                    pool.push({
+                        text:`${a} - ${b}`,
+                        answer:a-b
+                    });
+
+                }
+            }
+        }
     }else if(gameMode === "mixed"){
 
-    // 足し算45問
-    for(let a = 1; a <= 9; a++){
-
-        for(let b = 1; b <= 9; b++){
-
-            if(a + b <= 10){
-
+    // たしざん①
+    for(let a=1;a<=9;a++){
+        for(let b=1;b<=9;b++){
+            if(a+b<=10){
                 pool.push({
                     text:`${a} + ${b}`,
-                    answer:a + b
+                    answer:a+b
+                });
+            }
+        }
+    }
+
+    // たしざん②
+    for(let a=2;a<=9;a++){
+        for(let b=2;b<=9;b++){
+            if(a+b>=11){
+                pool.push({
+                    text:`${a} + ${b}`,
+                    answer:a+b
+                });
+            }
+        }
+    }
+
+    // ひきざん①
+    for(let a=1;a<=10;a++){
+        for(let b=1;b<a;b++){
+            pool.push({
+                text:`${a} - ${b}`,
+                answer:a-b
+            });
+        }
+    }
+
+    // ひきざん②
+    for(let a=11;a<=18;a++){
+        for(let b=2;b<=9;b++){
+
+            if(a-b>=1 && a-b<=9){
+
+                pool.push({
+                    text:`${a} - ${b}`,
+                    answer:a-b
                 });
 
             }
-
         }
-
     }
-
-    // 引き算45問
-    for(let a = 1; a <= 10; a++){
-
-        for(let b = 1; b < a; b++){
-
-            pool.push({
-                text:`${a} - ${b}`,
-                answer:a - b
-            });
-
-        }
-
-    }
-
 }
 
     for(let i = pool.length - 1; i > 0; i--){
@@ -1296,7 +1435,7 @@ const totalTime=stopTimer();
 gameScreen.classList.add("hidden");
 resultScreen.classList.remove("hidden");
 
-document.getElementById("rCorrect").textContent=TOTAL - wrong;
+document.getElementById("rCorrect").textContent=Math.max(0, TOTAL - wrong);
 document.getElementById("rWrong").textContent=wrong;
 document.getElementById("rRate").textContent=
 `${Math.max(
@@ -1380,6 +1519,22 @@ if(isMobile()){
 menuScreen.classList.add("hidden");
 gameScreen.classList.remove("hidden");
 
+    if(gameMode==="addition1"){
+    modeNameEl.textContent = "🟥たしざん①";
+}
+else if(gameMode==="addition2"){
+    modeNameEl.textContent = "🟨たしざん②";
+}
+else if(gameMode==="subtraction1"){
+    modeNameEl.textContent = "🟦ひきざん①";
+}
+else if(gameMode==="subtraction2"){
+    modeNameEl.textContent = "🟩ひきざん②";
+}
+else if(gameMode==="mixed"){
+    modeNameEl.textContent = "🎲まぜまぜ";
+}
+
 index=0;
 wrong=0;
 judging=false;
@@ -1416,7 +1571,7 @@ function createAnswerButtons(){
 
     answerButtons.innerHTML = "";
 
-    for(let i = 1;i <= 10;i++){
+    for(let i = 1;i <= 18;i++){
 
         const btn =
         document.createElement("button");
@@ -1437,28 +1592,29 @@ function createAnswerButtons(){
 
 }
 
-additionBtn.addEventListener("click",()=>{
-
-    gameMode = "addition";
-
+addition1Btn.addEventListener("click",()=>{
+    gameMode="addition1";
     startGame();
-
 });
 
-subtractionBtn.addEventListener("click",()=>{
-
-    gameMode = "subtraction";
-
+addition2Btn.addEventListener("click",()=>{
+    gameMode="addition2";
     startGame();
+});
 
+subtraction1Btn.addEventListener("click",()=>{
+    gameMode="subtraction1";
+    startGame();
+});
+
+subtraction2Btn.addEventListener("click",()=>{
+    gameMode="subtraction2";
+    startGame();
 });
 
 mixedBtn.addEventListener("click",()=>{
-
     gameMode = "mixed";
-
     startGame();
-
 });
 
 answerBtn.addEventListener("click",judge);
