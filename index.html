@@ -156,7 +156,7 @@ color:#5d5d8d;
 
 .status{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(3,1fr);
 gap:10px;
 margin-bottom:16px;
 }
@@ -627,7 +627,7 @@ z-index:-1;
 
     .status{
         display:grid;
-        grid-template-columns:repeat(4,1fr);
+        grid-template-columns:repeat(3,1fr);
         gap:10px;
         margin-bottom:16px;
     }
@@ -700,13 +700,11 @@ z-index:-1;
 .yellowMode{
     background:linear-gradient(
         180deg,
-        #ffe88a,
-        #ffd74f
+        #ffd95a,
+        #f0c938
     );
 
-    color:#555;
-
-    box-shadow:0 8px 0 #d8b63e;
+    box-shadow:0 8px 0 #c9a72e;
 }
 
 .blueMode{
@@ -725,8 +723,6 @@ z-index:-1;
         #a9f5a9,
         #7ee67e
     );
-
-    color:#444;
 
     box-shadow:0 8px 0 #60bb60;
 }
@@ -981,7 +977,6 @@ const timerEl = document.getElementById("timer");
 const questionCountEl = document.getElementById("questionCount");
 const remainingEl = document.getElementById("remaining");
 const progressFill = document.getElementById("progressFill");
-const modeNameEl = document.getElementById("modeName");
 const progressText = document.getElementById("progressText");
 const bird = document.getElementById("mainBird");
 
@@ -1517,22 +1512,6 @@ if(isMobile()){
 
 menuScreen.classList.add("hidden");
 gameScreen.classList.remove("hidden");
-
-    if(gameMode==="addition1"){
-    modeNameEl.textContent = "🟥たしざん①";
-}
-else if(gameMode==="addition2"){
-    modeNameEl.textContent = "🟨たしざん②";
-}
-else if(gameMode==="subtraction1"){
-    modeNameEl.textContent = "🟦ひきざん①";
-}
-else if(gameMode==="subtraction2"){
-    modeNameEl.textContent = "🟩ひきざん②";
-}
-else if(gameMode==="mixed"){
-    modeNameEl.textContent = "🎲まぜまぜ";
-}
 
 index=0;
 wrong=0;
